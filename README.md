@@ -17,5 +17,5 @@ What gives us this interface.
 
 1. ***We can redefine attributes***. An update of the code is required, which retrieves the attributes.
 
-2. ***We can use attributes***. Requires revision.
+2. ***We can use attributes as options***. Requires revision.
 https://github.com/aspnet/Extensions/tree/master/src/Options
