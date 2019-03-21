@@ -1,4 +1,5 @@
 using Lobster.Home.Dependency.InjectableAttributes;
+using Lobster.Home.Dependency.InjectableAttributes.Reflection;
 using NUnit.Framework;
 using System.Linq;
 
@@ -122,7 +123,7 @@ namespace Lobster.Home.DIA.Tests
             Assert.NotNull(prop);
 
             var r = new CustomAttributeResolverThreadUnsafe()
-                        .Add((SomeClass2 obj) => obj.SomeProperty2, new SomeAttribute(name: customAttributeNameForProperty));
+                        .Add(Property<SomeClass2>.Of(obj => obj.SomeProperty2), new SomeAttribute(name: customAttributeNameForProperty));
 
             var attrOfProperty = r.GetCustomAttribute<SomeAttribute>(prop);
             Assert.NotNull(attrOfProperty);
@@ -135,7 +136,7 @@ namespace Lobster.Home.DIA.Tests
             Assert.NotNull(prop);
 
             var r = new CustomAttributeResolverThreadUnsafe()
-                        .Add((SomeClass2 obj) => obj.SomeMethod2(), new SomeAttribute(name: customAttributeNameForProperty));
+                        .Add(Method<SomeClass2>.Of(obj => obj.SomeMethod2()), new SomeAttribute(name: customAttributeNameForProperty));
 
             var attrOfProperty = r.GetCustomAttribute<SomeAttribute>(prop);
             Assert.NotNull(attrOfProperty);
