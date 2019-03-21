@@ -28,5 +28,5 @@ https://github.com/aspnet/Extensions/tree/master/src/Options
 4. The idea is not new, the question of its implementation.
 
 
-Приветствуются обсуждения. Желательно на английском или русском языках.
+Приветствуются обсуждения. Желательно на английском или русском языках. 
 Discussions are welcome. (Desirable in English or Russian)
