@@ -3,6 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 
@@ -39,7 +40,7 @@ namespace Lobster.Home.Dependency.InjectableAttributes
         public override IEnumerable<TAttribute> GetCustomAttributes<TAttribute>(MemberInfo mi)
         {
             var list = Get<TAttribute>(mi);
-            if(list == null)
+            if (list == null)
             {
                 return Array.Empty<TAttribute>();
             }
@@ -51,11 +52,23 @@ namespace Lobster.Home.Dependency.InjectableAttributes
             return typedList;
         }
 
-        public CustomAttributeResolverThreadUnsafe Add<Type,TAttribute>(TAttribute attribute)
+        public CustomAttributeResolverThreadUnsafe Add<TType, TAttribute>(TAttribute attribute)
              where TAttribute : Attribute
         {
-            return Add<TAttribute>(typeof(Type), attribute);
+            return Add<TAttribute>(typeof(TType), attribute);
         }
+
+        public CustomAttributeResolverThreadUnsafe Add<TType, TProp, TAttribute>(
+            Expression<Func<TType, TProp>> expression,
+            TAttribute attribute)
+             where TAttribute : Attribute
+        {
+            var memberExpression = expression.Body as MemberExpression;
+            if (memberExpression == null)
+                throw new InvalidOperationException();
+            return Add<TAttribute>(memberExpression.Member, attribute);
+        }
+
         public CustomAttributeResolverThreadUnsafe Add<TAttribute>(MemberInfo mi, TAttribute attribute)
             where TAttribute : Attribute
         {

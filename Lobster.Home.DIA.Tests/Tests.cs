@@ -16,7 +16,7 @@ namespace Lobster.Home.DIA.Tests
         }
 
         [Test]
-        public void CustomAttributeResolver_GetCustomAttribute_Class()
+        public void DefaultAttributeResolver_GetCustomAttribute_Class()
         {
             var r = new DefaultAttributeResolver();
 
@@ -25,7 +25,7 @@ namespace Lobster.Home.DIA.Tests
             Assert.AreEqual(nameof(SomeClass), attrOfClass.Name);
         }
         [Test]
-        public void CustomAttributeResolver_GetCustomAttribute_Property()
+        public void DefaultAttributeResolver_GetCustomAttribute_Property()
         {
             var r = new DefaultAttributeResolver();
 
@@ -37,7 +37,7 @@ namespace Lobster.Home.DIA.Tests
             Assert.AreEqual(nameof(SomeClass.SomeProperty), attrOfProperty.Name);
         }
         [Test]
-        public void DefaultAttributeResolver_AddAttributes_Class()
+        public void CustomAttributeResolver_AddAttributes_Class()
         {
             var r = new CustomAttributeResolverThreadUnsafe()
                         .Add<SomeClass2, SomeAttribute>(new SomeAttribute(name: customAttributeNameForClass));
@@ -47,7 +47,7 @@ namespace Lobster.Home.DIA.Tests
             Assert.AreEqual(customAttributeNameForClass, attrOfClass.Name);
         }
         [Test]
-        public void DefaultAttributeResolver_AddAttributes_Property()
+        public void CustomAttributeResolver_AddAttributes_Property()
         {
             var prop = typeof(SomeClass2).GetProperty(nameof(SomeClass2.SomeProperty2));
             Assert.NotNull(prop);
@@ -112,6 +112,21 @@ namespace Lobster.Home.DIA.Tests
                 var attrOfClass = r.GetCustomAttributes<SomeAttribute>(typeof(SomeClass)).ToArray();
                 Assert.AreEqual(2, attrOfClass.Length);
             }
+        }
+
+
+        [Test]
+        public void CustomAttributeResolver_PropertyExpression()
+        {
+            var prop = typeof(SomeClass2).GetProperty(nameof(SomeClass2.SomeProperty2));
+            Assert.NotNull(prop);
+
+            var r = new CustomAttributeResolverThreadUnsafe()
+                        .Add((SomeClass2 obj) => obj.SomeProperty2, new SomeAttribute(name: customAttributeNameForProperty));
+
+            var attrOfProperty = r.GetCustomAttribute<SomeAttribute>(prop);
+            Assert.NotNull(attrOfProperty);
+            Assert.AreEqual(customAttributeNameForProperty, attrOfProperty.Name);
         }
     }
 }
