@@ -58,27 +58,6 @@ namespace Lobster.Home.Dependency.InjectableAttributes
             return Add<TAttribute>(typeof(TType), attribute);
         }
 
-        public CustomAttributeResolverThreadUnsafe Add<TType, TProp, TAttribute>(
-            Expression<Func<TType, TProp>> expression,
-            TAttribute attribute)
-             where TAttribute : Attribute
-        {
-            var memberExpression = expression.Body as MemberExpression;
-            if (memberExpression == null)
-                throw new InvalidOperationException();
-            return Add<TAttribute>(memberExpression.Member, attribute);
-        }
-        public CustomAttributeResolverThreadUnsafe Add<TType, TAttribute>(
-            Expression<Action<TType>> expression,
-            TAttribute attribute)
-             where TAttribute : Attribute
-        {
-            var memberExpression = expression.Body as MethodCallExpression;
-            if (memberExpression == null)
-                throw new InvalidOperationException();
-            return Add<TAttribute>(memberExpression.Method, attribute);
-        }
-
         public CustomAttributeResolverThreadUnsafe Add<TAttribute>(MemberInfo mi, TAttribute attribute)
             where TAttribute : Attribute
         {
