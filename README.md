@@ -19,3 +19,7 @@ What gives us this interface.
 
 2. ***We can use attributes as options***. Requires revision.
 https://github.com/aspnet/Extensions/tree/master/src/Options
+
+
+
+Discussions are welcome.
