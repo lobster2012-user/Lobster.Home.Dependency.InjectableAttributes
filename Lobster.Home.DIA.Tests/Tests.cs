@@ -128,5 +128,18 @@ namespace Lobster.Home.DIA.Tests
             Assert.NotNull(attrOfProperty);
             Assert.AreEqual(customAttributeNameForProperty, attrOfProperty.Name);
         }
+        [Test]
+        public void CustomAttributeResolver_MethodExpression()
+        {
+            var prop = typeof(SomeClass2).GetMethod(nameof(SomeClass2.SomeMethod2));
+            Assert.NotNull(prop);
+
+            var r = new CustomAttributeResolverThreadUnsafe()
+                        .Add((SomeClass2 obj) => obj.SomeMethod2(), new SomeAttribute(name: customAttributeNameForProperty));
+
+            var attrOfProperty = r.GetCustomAttribute<SomeAttribute>(prop);
+            Assert.NotNull(attrOfProperty);
+            Assert.AreEqual(customAttributeNameForProperty, attrOfProperty.Name);
+        }
     }
 }

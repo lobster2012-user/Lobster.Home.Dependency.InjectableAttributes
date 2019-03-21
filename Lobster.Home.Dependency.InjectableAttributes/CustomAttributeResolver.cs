@@ -68,6 +68,16 @@ namespace Lobster.Home.Dependency.InjectableAttributes
                 throw new InvalidOperationException();
             return Add<TAttribute>(memberExpression.Member, attribute);
         }
+        public CustomAttributeResolverThreadUnsafe Add<TType, TAttribute>(
+            Expression<Action<TType>> expression,
+            TAttribute attribute)
+             where TAttribute : Attribute
+        {
+            var memberExpression = expression.Body as MethodCallExpression;
+            if (memberExpression == null)
+                throw new InvalidOperationException();
+            return Add<TAttribute>(memberExpression.Method, attribute);
+        }
 
         public CustomAttributeResolverThreadUnsafe Add<TAttribute>(MemberInfo mi, TAttribute attribute)
             where TAttribute : Attribute
