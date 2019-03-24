@@ -1,7 +1,8 @@
 # Lobster.Home.Dependency.InjectableAttributes
 IAttributeDescriptor: ***OVERRIDES BUILT-IN ATTRIBUTES***
 
-Idea without implementation
+Idea without implementation.
+
 Any comments and corrections to the translation are welcome.
 
 
