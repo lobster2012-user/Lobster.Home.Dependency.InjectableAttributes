@@ -55,6 +55,7 @@ It is easy to use someone else's code by redefining any attributes many times.
 
 Disadvantages.
 Metadata analyzers will not work correctly.
+
 Недостатки.
 Анализаторы метаданных работать будут некорректно.
 
