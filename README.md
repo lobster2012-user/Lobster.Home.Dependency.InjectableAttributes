@@ -42,11 +42,15 @@ The use of attributes will not constrain you from the box.
 ```csharp
 
 ...
-AttributeDescriptor.Default.AddAttributes(typeof(CustomType), new CustomAttribute {});
-
+void Initialize()
+{
+   AttributeDescriptor.Default.AddAttributes(typeof(CustomType), new CustomAttribute {});
+}
 ...
-AttributeDescriptor.Default.GetCustomAttribute<CustomAttribute>(typeof(CustomType));
 
-
+void YourLib()
+{
+   AttributeDescriptor.Default.GetCustomAttribute<CustomAttribute>(typeof(CustomType));
+}
 
 ```
