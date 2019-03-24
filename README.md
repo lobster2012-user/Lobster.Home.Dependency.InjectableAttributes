@@ -59,7 +59,10 @@ public class OptionsAttribute : Attribute
 [Options(SomeString="abc")]
 public class SomeClass
 {
-
+    public class SomeClass(IOptions<Options> options)
+    {
+        ....
+    }
 }
 
 ...
