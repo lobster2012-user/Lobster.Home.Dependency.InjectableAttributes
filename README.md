@@ -1,33 +1,74 @@
 # Lobster.Home.Dependency.InjectableAttributes
+IAttributeDescriptor: ***OVERRIDES BUILT-IN ATTRIBUTES***
+
+Idea without implementation.
+
+Any comments and corrections to the translation are welcome.
 
 
 ```csharp
 
-    public interface IAttributeResolver
+    public interface ICustomAttributeDescriptor
     {
-        IEnumerable<TAttribute> GetCustomAttributes<TAttribute>(MemberInfo mi)
-            where TAttribute : Attribute;
-        TAttribute GetCustomAttribute<TAttribute>(MemberInfo mi)
-            where TAttribute : Attribute;
+        IEnumerable<Attribute> GetCustomAttributes(ICustomAttributeProvider provider, bool inherit);
+        IEnumerable<Attribute> GetCustomAttributes(ICustomAttributeProvider provider, Type attributeType, bool inherit);
+        bool IsDefined(ICustomAttributeProvider provider, Type attributeType, bool inherit);
+    }
+    
+    public static class CustomAttributeDescriptorExtensions
+    {
+        public static T GetCustomAttribute<T>(this ICustomAttributeDescriptor attributeResolver, ICustomAttributeProvider attributeProvider, bool inherit = false)
+            where T : Attribute
+        {
+            return GetCustomAttributes<T>(attributeResolver, attributeProvider, inherit).SingleOrDefault();
+        }
+        public static IEnumerable<T> GetCustomAttributes<T>(this ICustomAttributeDescriptor attributeResolver, ICustomAttributeProvider attributeProvider, bool inherit = false)
+            where T : Attribute
+        {
+            return attributeResolver.GetCustomAttributes(attributeProvider, typeof(T), inherit).Cast<T>();
+        }
+        public static bool IsAttributeDefined<T>(this ICustomAttributeDescriptor attributeResolver, ICustomAttributeProvider attributeProvider, bool inherit = false) where T : Attribute
+        {
+            return attributeResolver.IsDefined(attributeProvider, typeof(T), inherit);
+        }
     }
 
 ```
 
-What gives us this interface.
 
-1. ***We can redefine built-in attributes***. An update of the code is required, which retrieves the attributes.
-Мы можем использовать аттрибуты, как и раньше, но приэтом будем иметь возможность их переопределять
+A huge number of implementations of something that allows you to work with and without attributes.
+Using the attribute descriptor, we have a unified approach to working with and without attributes, 
+attributes can be redefined via the descriptor, if it allows it. 
+You can delete attributes, change, add, referring only to the descriptor. 
+The use of attributes will not constrain you ***out of the box***.
 
-2. ***We can use attributes as (default) options and redefine these attributes***. Requires revision.
-https://github.com/aspnet/Extensions/tree/master/src/Options
-Аттрибутами можно задавать настройки, при этом можно будет эти аттрибуы переопределять.
+Огромное количество реализаций чего-либо работают с аттрибутами, при этом позволяют 
+задавать настройки и без них. Получая аттрибуты через ICustomAttributeDescriptor
+вы больше не привязаны жестко к жестко прописанным аттрибутам, 
+вы можете поменять их на лету, удалить, добавить.
+Внешне это будет единый подход к работае с аттрибутами.
+И это будет работать из коробки.
 
-3. Using the cache for ordinary attributes, you can make them changeable on the fly.(not implemented)
-Используя кэш для обычных аттрибутов можно сделать их изменямыми на лету. В коде сейчас это не реализовано.
+```csharp
 
-4. The idea is not new, the question of its implementation.
+...
+void Initialize()
+{
+   AttributeDescriptor.Default.AddAttributes(typeof(CustomType), new CustomAttribute {});
+}
 
+void Run()
+{
+   _someLib.Run();
+}
+...
 
-Приветствуются обсуждения. Желательно на английском или русском языках. 
+class SomeLib
+{
+   void Initialize()
+   {
+     AttributeDescriptor.Default.GetCustomAttribute<CustomAttribute>(typeof(CustomType));
+   }
+}
 
-Discussions are welcome. (Desirable in English or Russian)
+```
