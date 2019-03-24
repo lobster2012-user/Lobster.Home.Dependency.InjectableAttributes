@@ -36,7 +36,7 @@ A huge number of implementations of something that allows you to work with and w
 Using the attribute descriptor, we have a unified approach to working with and without attributes, 
 attributes can be redefined via the descriptor, if it allows it. 
 You can delete attributes, change, add, referring only to the descriptor. 
-The use of attributes will not constrain you from the box.
+The use of attributes will not constrain you ***out of the box***.
 
 
 ```csharp
@@ -46,11 +46,19 @@ void Initialize()
 {
    AttributeDescriptor.Default.AddAttributes(typeof(CustomType), new CustomAttribute {});
 }
+
+void Run()
+{
+   _someLib.Run();
+}
 ...
 
-void YourLib()
+class SomeLib
 {
-   AttributeDescriptor.Default.GetCustomAttribute<CustomAttribute>(typeof(CustomType));
+   void Initialize()
+   {
+     AttributeDescriptor.Default.GetCustomAttribute<CustomAttribute>(typeof(CustomType));
+   }
 }
 
 ```
