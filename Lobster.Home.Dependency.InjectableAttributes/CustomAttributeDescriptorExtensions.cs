@@ -7,36 +7,17 @@ namespace Lobster.Home.Dependency.InjectableAttributes
 {
     public static class CustomAttributeDescriptorExtensions
     {
-        public static T GetCustomAttribute<T>(
-              this ICustomAttributeDescriptor attributeResolver,
-              ICustomAttributeProvider attributeProvider,
-              bool inherit = false)
-              where T : Attribute
-        {
-            return GetCustomAttributes<T>(
-                        attributeResolver, 
-                        attributeProvider, 
-                        inherit)
-                  .SingleOrDefault();
-        }
-            public static IEnumerable<T> GetCustomAttributes<T>(
-            this ICustomAttributeDescriptor attributeResolver,
-            ICustomAttributeProvider attributeProvider,
-            bool inherit = false)
+        public static T GetCustomAttribute<T>(this ICustomAttributeDescriptor attributeResolver, ICustomAttributeProvider attributeProvider, bool inherit = true)
             where T : Attribute
         {
-            return attributeResolver
-                        .GetCustomAttributes(
-                            attributeProvider,
-                            typeof(T), 
-                            inherit)
-                        .Cast<T>();
+            return GetCustomAttributes<T>(attributeResolver, attributeProvider, inherit).SingleOrDefault();
         }
-        public static bool IsAttributeDefined<T>(
-            this ICustomAttributeDescriptor attributeResolver,
-            ICustomAttributeProvider attributeProvider,
-            bool inherit = false)
+        public static IEnumerable<T> GetCustomAttributes<T>(this ICustomAttributeDescriptor attributeResolver, ICustomAttributeProvider attributeProvider, bool inherit = true)
             where T : Attribute
+        {
+            return attributeResolver.GetCustomAttributes(attributeProvider, typeof(T), inherit).Cast<T>();
+        }
+        public static bool IsAttributeDefined<T>(this ICustomAttributeDescriptor attributeResolver, ICustomAttributeProvider attributeProvider, bool inherit = true) where T : Attribute
         {
             return attributeResolver.IsDefined(attributeProvider, typeof(T), inherit);
         }
