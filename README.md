@@ -55,6 +55,11 @@ public class OptionsAttribute : Attribute
 {
      public string SomeString {get;set;}
 }
+public class Options
+{
+     public string SomeString {get;set;}
+     public string SomeString2 {get;set;}
+}
 
 [Options(SomeString="abc")]
 public class SomeClass
@@ -68,9 +73,12 @@ public class SomeClass
 ...
 void Initialize()
 {
-   AttributeDescriptor.Default.AddAttribute(typeof(CustomType), new CustomAttribute {});
+   AttributeDescriptor.Default.AddCustomAttribute(typeof(CustomType), new CustomAttribute {});
+   
    var options = AttributeDescriptor.Default.GetCustomAttribute<OptionsAttribute>(typeof(CustomType));
    options.SomeString = "qwerty";
+   
+   AttributeDescriptor.Default.AddCustomAttribute<DefaultValueAttribute>(typeof(Options), new DefaultValueAttribute("tyuio"));
 }
 
 void Run()
