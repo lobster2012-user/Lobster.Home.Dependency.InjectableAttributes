@@ -1,5 +1,5 @@
 # Lobster.Home.Dependency.InjectableAttributes
-IAttributeDescriptor: ***OVERRIDES BUILT-IN ATTRIBUTES***
+ICustomAttributeDescriptor: ***OVERRIDES BUILT-IN ATTRIBUTES***
 
 Idea without implementation.
 
