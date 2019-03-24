@@ -10,6 +10,11 @@ using System.Text;
 
 namespace Lobster.Home.Dependency.InjectableAttributes
 {
+    /// <summary>
+    /// EXAMPLE
+    /// IDEAL IMPLEMENTATION: custom + default_cache
+    ///             FEATURES: add/update/remove/clear
+    /// </summary>
     public class CustomAttributeResolverThreadUnsafe : ICustomAttributeDescriptor
     {
         private Attribute[] EmptyAttributeArray = Array.Empty<Attribute>();
