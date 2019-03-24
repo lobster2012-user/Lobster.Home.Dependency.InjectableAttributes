@@ -1,5 +1,5 @@
 # Lobster.Home.Dependency.InjectableAttributes
-IAttributeResolver: OVERRIDES BUILT-IN ATTRIBUTES
+IAttributeDescriptor: OVERRIDES BUILT-IN ATTRIBUTES
 
 
 ```csharp
