@@ -82,7 +82,7 @@ void Initialize()
    var options = descriptor.GetCustomAttribute<OptionsAttribute>(typeof(CustomType));
    options.SomeString = "qwerty";
    
-   descriptor.AddOrUpdate<DefaultValueAttribute>(Method<Options>.Of(()=>SomeString2), new DefaultValueAttribute("tyuio"));
+   descriptor.AddOrUpdate<DefaultValueAttribute>(Property<Options>.Of(()=>SomeString2), new DefaultValueAttribute("tyuio"));
 }
 
 void Run()
