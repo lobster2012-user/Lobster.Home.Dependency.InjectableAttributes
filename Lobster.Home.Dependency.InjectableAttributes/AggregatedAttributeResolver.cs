@@ -4,45 +4,56 @@ using System.Reflection;
 
 namespace Lobster.Home.Dependency.InjectableAttributes
 {
-    public class AggregatedAttributeResolver : IAttributeResolver
+    public class AggregatedAttributeResolver : ICustomAttributeResolver
     {
-        public List<IAttributeResolver> Resolvers { get; private set; }
-         = new List<IAttributeResolver>();
+        public List<ICustomAttributeResolver> Resolvers { get; private set; }
+         = new List<ICustomAttributeResolver>();
 
         public AggregatedAttributeResolver()
         {
 
         }
 
-        public AggregatedAttributeResolver(params IAttributeResolver[] resolvers)
+        public AggregatedAttributeResolver(params ICustomAttributeResolver[] resolvers)
         {
             Resolvers.AddRange(resolvers ?? throw new ArgumentNullException(nameof(resolvers)));
         }
 
-        public TAttribute GetCustomAttribute<TAttribute>(MemberInfo mi) where TAttribute : Attribute
+        public IEnumerable<Attribute> GetCustomAttributes(ICustomAttributeProvider provider, bool inherit)
         {
             for (var i = Resolvers.Count - 1; i >= 0; --i)
             {
-                var attr = Resolvers[i].GetCustomAttribute<TAttribute>(mi);
-                if (attr != null)
-                    return attr;
-            }
-            return null;
-        }
-
-        public IEnumerable<TAttribute> GetCustomAttributes<TAttribute>(MemberInfo mi) where TAttribute : Attribute
-        {
-            var total = new List<TAttribute>();
-            for (var i = Resolvers.Count - 1; i >= 0; --i)
-            {
-                var result = Resolvers[i].GetCustomAttributes<TAttribute>(mi);
-                total.AddRange(result);
-                if (result is BreakableEnumerable<TAttribute>)
+                var attrs = Resolvers[i].GetCustomAttributes(provider, inherit);
+                foreach (var attr in attrs)
                 {
-                    break;
+                    yield return attr;
                 }
             }
-            return total.ToArray();
+        }
+
+        public IEnumerable<Attribute> GetCustomAttributes(ICustomAttributeProvider provider, Type attributeType, bool inherit)
+        {
+            for (var i = Resolvers.Count - 1; i >= 0; --i)
+            {
+                var attrs = Resolvers[i].GetCustomAttributes(provider, attributeType, inherit);
+                foreach (var attr in attrs)
+                {
+                    yield return attr;
+                }
+            }
+        }
+
+        public bool IsDefined(ICustomAttributeProvider provider, Type attributeType, bool inherit)
+        {
+            for (var i = Resolvers.Count - 1; i >= 0; --i)
+            {
+                var result = Resolvers[i].IsDefined(provider, attributeType, inherit);
+                if (result)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
