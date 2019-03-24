@@ -51,10 +51,23 @@ The use of attributes will not constrain you ***out of the box***.
 
 ```csharp
 
+public class OptionsAttribute : Attribute
+{
+     public string SomeString {get;set;}
+}
+
+[Options(SomeString="abc")]
+public class SomeClass
+{
+
+}
+
 ...
 void Initialize()
 {
-   AttributeDescriptor.Default.AddAttributes(typeof(CustomType), new CustomAttribute {});
+   AttributeDescriptor.Default.AddAttribute(typeof(CustomType), new CustomAttribute {});
+   var options = AttributeDescriptor.Default.GetCustomAttribute<OptionsAttribute>(typeof(CustomType));
+   options.SomeString = "qwerty";
 }
 
 void Run()
