@@ -58,6 +58,7 @@ public class OptionsAttribute : Attribute
 public class Options
 {
      public string SomeString {get;set;}
+     [DefaultValue("defaultValue")]
      public string SomeString2 {get;set;}
 }
 
