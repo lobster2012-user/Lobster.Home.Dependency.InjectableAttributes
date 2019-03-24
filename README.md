@@ -1,5 +1,5 @@
 # Lobster.Home.Dependency.InjectableAttributes
-IAttributeDescriptor: ***OVERRIDES BUILT-IN ATTRIBUTES***
+ICustomAttributeDescriptor: ***OVERRIDES BUILT-IN ATTRIBUTES***
 
 Idea without implementation.
 
@@ -41,6 +41,8 @@ Using the attribute descriptor, we have a unified approach to working with and w
 attributes can be redefined via the descriptor, if it allows it. 
 You can delete attributes, change, add, referring only to the descriptor. 
 The use of attributes will not constrain you ***out of the box***.
+You can also bypass the limitations when setting values for attributes now. (const expressions, strings) 
+It is easy to use someone else's code by redefining any attributes many times.
 
 Огромное количество реализаций чего-либо работают с аттрибутами, при этом позволяют 
 задавать настройки и без них. Получая аттрибуты через ICustomAttributeDescriptor
@@ -48,13 +50,47 @@ The use of attributes will not constrain you ***out of the box***.
 вы можете поменять их на лету, удалить, добавить.
 Внешне это будет единый подход к работае с аттрибутами.
 И это будет работать из коробки.
+Появляется возможность обойти ограничения в установки значений аттрибутов.
+Можно легко использовать чужой код множетсов раз переопределяя аттрибуты.
+
+Disadvantages.
+Metadata analyzers will not work correctly.
+
+Недостатки.
+Анализаторы метаданных работать будут некорректно.
 
 ```csharp
+
+public class OptionsAttribute : Attribute
+{
+     public string SomeString {get;set;}
+}
+public class Options
+{
+     public string SomeString {get;set;}
+     [DefaultValue("defaultValue")]
+     public string SomeString2 {get;set;}
+}
+
+[Options(SomeString="abc")]
+public class SomeClass
+{
+    public class SomeClass(IOptions<Options> options)
+    {
+        ....
+    }
+}
 
 ...
 void Initialize()
 {
-   AttributeDescriptor.Default.AddAttributes(typeof(CustomType), new CustomAttribute {});
+   var descriptor = AttributeDescriptor.Default;
+   descriptor.AddCustomAttribute(typeof(CustomType), new CustomAttribute {});
+   
+   var options = descriptor.GetCustomAttribute<OptionsAttribute>(typeof(CustomType));
+   options.SomeString = "qwerty";
+   
+   descriptor.AddOrUpdate<DefaultValueAttribute>(Property<Options>.Of(()=>SomeString2), new DefaultValueAttribute("tyuio"));
 }
 
 void Run()
