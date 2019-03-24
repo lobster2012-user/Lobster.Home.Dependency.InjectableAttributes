@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace Lobster.Home.DIA.Tests
 {
-    [AttributeUsage(AttributeTargets.All, Inherited = true)]
+    [AttributeUsage(AttributeTargets.All, Inherited = false)]
     public class Attribute3 : Attribute
     {
 
@@ -30,6 +30,12 @@ namespace Lobster.Home.DIA.Tests
     {
         private static readonly string customAttributeNameForClass = nameof(customAttributeNameForClass);
         private static readonly string customAttributeNameForProperty = nameof(customAttributeNameForProperty);
+
+        [Test]
+        public void SubsclassTest()
+        {
+            Assert.True(typeof(SomeClass3).IsAssignableFrom(typeof(SomeClass3)));
+        }
 
         [SetUp]
         public void Setup()
@@ -76,6 +82,13 @@ namespace Lobster.Home.DIA.Tests
         {
             Assert.AreEqual(0, typeof(SomeClass4).GetCustomAttributes<Attribute4>(inherit: false).Count());
         }
+
+        [Test]
+        public void DerivedAttributes9()
+        {
+            Assert.AreEqual(0, typeof(SomeClass4).GetCustomAttributes<Attribute3>(inherit: true).Count());
+        }
+
         /*
         [Test]
         public void DefaultAttributeResolver_GetCustomAttribute_Class()

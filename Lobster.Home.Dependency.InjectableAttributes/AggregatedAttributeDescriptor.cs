@@ -4,26 +4,26 @@ using System.Reflection;
 
 namespace Lobster.Home.Dependency.InjectableAttributes
 {
-    public class AggregatedAttributeResolver : ICustomAttributeResolver
+    public class AggregatedAttributeDescriptor : ICustomAttributeDescriptor
     {
-        public List<ICustomAttributeResolver> Resolvers { get; private set; }
-         = new List<ICustomAttributeResolver>();
+        public List<ICustomAttributeDescriptor> Descriptors { get; private set; }
+         = new List<ICustomAttributeDescriptor>();
 
-        public AggregatedAttributeResolver()
+        public AggregatedAttributeDescriptor()
         {
 
         }
 
-        public AggregatedAttributeResolver(params ICustomAttributeResolver[] resolvers)
+        public AggregatedAttributeDescriptor(params ICustomAttributeDescriptor[] descriptor)
         {
-            Resolvers.AddRange(resolvers ?? throw new ArgumentNullException(nameof(resolvers)));
+            Descriptors.AddRange(descriptor ?? throw new ArgumentNullException(nameof(descriptor)));
         }
 
         public IEnumerable<Attribute> GetCustomAttributes(ICustomAttributeProvider provider, bool inherit)
         {
-            for (var i = Resolvers.Count - 1; i >= 0; --i)
+            for (var i = Descriptors.Count - 1; i >= 0; --i)
             {
-                var attrs = Resolvers[i].GetCustomAttributes(provider, inherit);
+                var attrs = Descriptors[i].GetCustomAttributes(provider, inherit);
                 foreach (var attr in attrs)
                 {
                     yield return attr;
@@ -33,9 +33,9 @@ namespace Lobster.Home.Dependency.InjectableAttributes
 
         public IEnumerable<Attribute> GetCustomAttributes(ICustomAttributeProvider provider, Type attributeType, bool inherit)
         {
-            for (var i = Resolvers.Count - 1; i >= 0; --i)
+            for (var i = Descriptors.Count - 1; i >= 0; --i)
             {
-                var attrs = Resolvers[i].GetCustomAttributes(provider, attributeType, inherit);
+                var attrs = Descriptors[i].GetCustomAttributes(provider, attributeType, inherit);
                 foreach (var attr in attrs)
                 {
                     yield return attr;
@@ -45,9 +45,9 @@ namespace Lobster.Home.Dependency.InjectableAttributes
 
         public bool IsDefined(ICustomAttributeProvider provider, Type attributeType, bool inherit)
         {
-            for (var i = Resolvers.Count - 1; i >= 0; --i)
+            for (var i = Descriptors.Count - 1; i >= 0; --i)
             {
-                var result = Resolvers[i].IsDefined(provider, attributeType, inherit);
+                var result = Descriptors[i].IsDefined(provider, attributeType, inherit);
                 if (result)
                 {
                     return true;

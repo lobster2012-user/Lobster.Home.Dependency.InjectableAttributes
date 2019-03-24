@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Lobster.Home.Dependency.InjectableAttributes
 {
-    public class CustomAttributeResolverThreadUnsafe : ICustomAttributeResolver
+    public class CustomAttributeResolverThreadUnsafe : ICustomAttributeDescriptor
     {
         private Dictionary<ICustomAttributeProvider, List<Attribute>>
             _attributes = new Dictionary<ICustomAttributeProvider, List<Attribute>>();
@@ -124,7 +124,7 @@ namespace Lobster.Home.Dependency.InjectableAttributes
             {
                 if (_attributes.TryGetValue(provider, out var list))
                 {
-                    foreach (var attr in list.Where(z => z.IsOf(attributeType)))
+                    foreach (var attr in list.Where(z => z.IsObjectAssignableFromType(attributeType)))
                     {
                         yield return attr;
                     }
@@ -135,7 +135,7 @@ namespace Lobster.Home.Dependency.InjectableAttributes
         {
             if (_attributes.TryGetValue(provider, out var list))
             {
-                return list.Where(z => z.IsOf(attributeType));
+                return list.Where(z => z.IsObjectAssignableFromType(attributeType));
             }
             return Array.Empty<Attribute>();
         }
@@ -148,6 +148,14 @@ namespace Lobster.Home.Dependency.InjectableAttributes
             return GetCustomAttributesPerConcreteProvider(provider, attributeType);
         }
 
+        public static bool IsInheritableAttribute(Type attributeType)
+        {
+            var usageAttr = DefaultAttributeDescriptor.Instance
+                                .GetCustomAttributes<AttributeUsageAttribute>(attributeType)
+                                .SingleOrDefault();
+            return usageAttr?.Inherited != false;
+        }
+
         public bool IsDefined(ICustomAttributeProvider provider, Type attributeType, bool inherit)
         {
             if (inherit)
@@ -155,9 +163,7 @@ namespace Lobster.Home.Dependency.InjectableAttributes
                 throw new NotImplementedException();
             }
             if (!_attributes.TryGetValue(provider, out var list)) return false;
-            return list.Any(z => z.IsOf(attributeType));
+            return list.Any(z => z.IsObjectAssignableFromType(attributeType));
         }
-
-        
     }
 }

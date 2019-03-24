@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Lobster.Home.Dependency.InjectableAttributes
 {
-    public interface ICustomAttributeResolver
+    public interface ICustomAttributeDescriptor
     {
         IEnumerable<Attribute> GetCustomAttributes(ICustomAttributeProvider provider, bool inherit);
         IEnumerable<Attribute> GetCustomAttributes(ICustomAttributeProvider provider, Type attributeType, bool inherit);
