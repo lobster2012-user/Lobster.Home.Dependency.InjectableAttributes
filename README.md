@@ -1,6 +1,9 @@
 # Lobster.Home.Dependency.InjectableAttributes
 IAttributeDescriptor: OVERRIDES BUILT-IN ATTRIBUTES
 
+Idea without implementation
+Any comments and corrections to the translation are welcome.
+
 
 ```csharp
 
@@ -38,6 +41,10 @@ attributes can be redefined via the descriptor, if it allows it.
 You can delete attributes, change, add, referring only to the descriptor. 
 The use of attributes will not constrain you ***out of the box***.
 
+Огромное количество реализаций чего-либо работают с аттрибутами, при этом позволяют 
+задавать настройки и без них. Получая аттрибуты через ICustomAttributeDescriptor
+вы больше не привязаны жестко к жестко прописанным аттрибутам, 
+вы можете поменять их на лету, удалить, добавить. И это будет работать из коробки.
 
 ```csharp
 
