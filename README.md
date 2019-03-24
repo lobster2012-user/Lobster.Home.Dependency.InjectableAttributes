@@ -42,6 +42,7 @@ attributes can be redefined via the descriptor, if it allows it.
 You can delete attributes, change, add, referring only to the descriptor. 
 The use of attributes will not constrain you ***out of the box***.
 You can also bypass the limitations when setting values for attributes now. (const expressions, strings) 
+It is easy to use someone else's code by redefining any attributes many times.
 
 Огромное количество реализаций чего-либо работают с аттрибутами, при этом позволяют 
 задавать настройки и без них. Получая аттрибуты через ICustomAttributeDescriptor
