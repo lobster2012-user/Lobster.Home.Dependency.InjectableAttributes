@@ -1,4 +1,5 @@
 ﻿using Lobster.Home.Dependency.InjectableAttributes.Collections;
+using Lobster.Home.Dependency.InjectableAttributes.Reflection;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -123,7 +124,7 @@ namespace Lobster.Home.Dependency.InjectableAttributes
             {
                 if (_attributes.TryGetValue(provider, out var list))
                 {
-                    foreach (var attr in list.Where(z => z.GetType().IsSubclassOf(attributeType)))
+                    foreach (var attr in list.Where(z => z.IsOf(attributeType)))
                     {
                         yield return attr;
                     }
@@ -134,7 +135,7 @@ namespace Lobster.Home.Dependency.InjectableAttributes
         {
             if (_attributes.TryGetValue(provider, out var list))
             {
-                return list.Where(z => z.GetType().IsSubclassOf(attributeType));
+                return list.Where(z => z.IsOf(attributeType));
             }
             return Array.Empty<Attribute>();
         }
@@ -154,7 +155,9 @@ namespace Lobster.Home.Dependency.InjectableAttributes
                 throw new NotImplementedException();
             }
             if (!_attributes.TryGetValue(provider, out var list)) return false;
-            return list.Any(z => z.GetType().IsSubclassOf(attributeType));
+            return list.Any(z => z.IsOf(attributeType));
         }
+
+        
     }
 }
