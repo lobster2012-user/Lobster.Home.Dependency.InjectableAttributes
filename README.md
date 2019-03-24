@@ -74,12 +74,13 @@ public class SomeClass
 ...
 void Initialize()
 {
-   AttributeDescriptor.Default.AddCustomAttribute(typeof(CustomType), new CustomAttribute {});
+   var descriptor = AttributeDescriptor.Default;
+   descriptor.AddCustomAttribute(typeof(CustomType), new CustomAttribute {});
    
-   var options = AttributeDescriptor.Default.GetCustomAttribute<OptionsAttribute>(typeof(CustomType));
+   var options = descriptor.GetCustomAttribute<OptionsAttribute>(typeof(CustomType));
    options.SomeString = "qwerty";
    
-   AttributeDescriptor.Default.AddCustomAttribute<DefaultValueAttribute>(typeof(Options), new DefaultValueAttribute("tyuio"));
+   descriptor.AddCustomAttribute<DefaultValueAttribute>(typeof(Options), new DefaultValueAttribute("tyuio"));
 }
 
 void Run()
