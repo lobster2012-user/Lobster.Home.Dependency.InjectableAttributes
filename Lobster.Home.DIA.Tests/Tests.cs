@@ -15,9 +15,9 @@ namespace Lobster.Home.DIA.Tests
     [AttributeUsage(AttributeTargets.All, Inherited = true)]
     public class Attribute4 : Attribute3
     {
-
+        public string Attr { get; set; }
     }
-    [Attribute4]
+    [Attribute4(Attr = "new Attribute3()")]
     public class SomeClass3
     {
 

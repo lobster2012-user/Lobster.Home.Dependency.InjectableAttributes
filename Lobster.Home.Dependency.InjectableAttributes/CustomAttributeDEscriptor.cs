@@ -12,6 +12,7 @@ namespace Lobster.Home.Dependency.InjectableAttributes
 {
     public class CustomAttributeResolverThreadUnsafe : ICustomAttributeDescriptor
     {
+        private Attribute[] EmptyAttributeArray = Array.Empty<Attribute>();
         private Dictionary<ICustomAttributeProvider, List<Attribute>>
             _attributes = new Dictionary<ICustomAttributeProvider, List<Attribute>>();
         /*
@@ -101,6 +102,36 @@ namespace Lobster.Home.Dependency.InjectableAttributes
        }
        */
 
+        private void AssertNotNull(Type attributeType)
+        {
+            if (attributeType == null)
+            {
+                throw new ArgumentNullException(nameof(attributeType));
+            }
+        }
+        private void AssertIsAssignableFromAttribute(Type attributeType)
+        {
+            AssertNotNull(attributeType);
+            if (!attributeType.IsAssignableFrom(typeof(Attribute)))
+            {
+                throw new ArgumentException(nameof(attributeType));
+            }
+        }
+        private void AssertNotInherit(bool inherit)
+        {
+            if (inherit)
+            {
+                throw new NotImplementedException(nameof(inherit));
+            }
+        }
+        public static bool IsInheritableAttribute(Type attributeType)
+        {
+            var usageAttr = DefaultAttributeDescriptor.Instance
+                                .GetCustomAttributes<AttributeUsageAttribute>(attributeType)
+                                .SingleOrDefault();
+            return usageAttr?.Inherited != false;
+        }
+
         private IEnumerable<Attribute> GetCustomAttributesPerConcreteProvider(ICustomAttributeProvider provider)
         {
             if (_attributes.TryGetValue(provider, out var list))
@@ -109,15 +140,6 @@ namespace Lobster.Home.Dependency.InjectableAttributes
             }
             return Array.Empty<Attribute>();
         }
-        public IEnumerable<Attribute> GetCustomAttributes(ICustomAttributeProvider provider, bool inherit)
-        {
-            if (inherit)
-            {
-                throw new NotImplementedException();
-            }
-            return GetCustomAttributesPerConcreteProvider(provider);
-        }
-
         private IEnumerable<Attribute> GetCustomAttributesPerConcreteProvider(ICustomAttributeProvider provider, Type attributeType)
         {
             for (var currentType = attributeType; currentType != null; currentType = currentType.BaseType)
@@ -139,29 +161,23 @@ namespace Lobster.Home.Dependency.InjectableAttributes
             }
             return Array.Empty<Attribute>();
         }
+
+        public IEnumerable<Attribute> GetCustomAttributes(ICustomAttributeProvider provider, bool inherit)
+        {
+            AssertNotInherit(inherit);
+            return GetCustomAttributesPerConcreteProvider(provider);
+        }
         public IEnumerable<Attribute> GetCustomAttributes(ICustomAttributeProvider provider, Type attributeType, bool inherit)
         {
-            if (inherit)
-            {
-                throw new NotImplementedException();
-            }
+            AssertIsAssignableFromAttribute(attributeType);
+            AssertNotInherit(inherit);
             return GetCustomAttributesPerConcreteProvider(provider, attributeType);
-        }
-
-        public static bool IsInheritableAttribute(Type attributeType)
-        {
-            var usageAttr = DefaultAttributeDescriptor.Instance
-                                .GetCustomAttributes<AttributeUsageAttribute>(attributeType)
-                                .SingleOrDefault();
-            return usageAttr?.Inherited != false;
         }
 
         public bool IsDefined(ICustomAttributeProvider provider, Type attributeType, bool inherit)
         {
-            if (inherit)
-            {
-                throw new NotImplementedException();
-            }
+            AssertIsAssignableFromAttribute(attributeType);
+            AssertNotInherit(inherit);
             if (!_attributes.TryGetValue(provider, out var list)) return false;
             return list.Any(z => z.IsObjectAssignableFromType(attributeType));
         }
