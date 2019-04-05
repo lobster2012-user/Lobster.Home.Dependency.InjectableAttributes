@@ -1,4 +1,7 @@
 # Lobster.Home.Dependency.InjectableAttributes
+
+[![Join the chat at https://gitter.im/lobster2012-user/Lobster.Home.Dependency.InjectableAttributes](https://badges.gitter.im/lobster2012-user/Lobster.Home.Dependency.InjectableAttributes.svg)](https://gitter.im/lobster2012-user/Lobster.Home.Dependency.InjectableAttributes?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ICustomAttributeDescriptor: ***OVERRIDES BUILT-IN ATTRIBUTES***
 
 Idea without implementation.
